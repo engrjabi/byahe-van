@@ -234,7 +234,7 @@ ${concatInputs()}`);
 
             <div className={'italic font-bold pb-12 pt-4'}>
                 Click submit once summary is confirmed and
-                submit images on this link -
+                submit images on telegram
             </div>
         </form>
     );
