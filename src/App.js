@@ -109,7 +109,7 @@ ${concatInputs()}`);
                 Gross Per Trip:
                 <input
                     type="number"
-                    className="form-input ml-4 px-2 py-2 rounded-full"
+                    className="form-input ml-4 px-2 py-2 rounded-full w-32"
                     value={costPerTrip}
                     onChange={makeHandleChangeEvent(setCostPerTrip)}
                 />
@@ -119,7 +119,7 @@ ${concatInputs()}`);
                 <input
                     type="number"
                     value={driverPerTrip}
-                    className="form-input ml-4 px-2 py-2 rounded-full"
+                    className="form-input ml-4 px-2 py-2 rounded-full w-32"
                     onChange={makeHandleChangeEvent(setDriverPerTrip)}
                 />
             </div>
@@ -128,7 +128,7 @@ ${concatInputs()}`);
                 <input
                     type="number"
                     value={butawPerTrip}
-                    className="form-input ml-4 px-2 py-2 rounded-full"
+                    className="form-input ml-4 px-2 py-2 rounded-full w-32"
                     onChange={makeHandleChangeEvent(setButawPerTrip)}
                 />
             </div>
@@ -138,7 +138,7 @@ ${concatInputs()}`);
                 Name:
                 <input
                     type="text"
-                    className="form-input ml-4 px-2 py-2 rounded-full"
+                    className="form-input ml-4 px-2 py-2 rounded-full w-32"
                     value={name}
                     onChange={makeHandleChangeEvent(setName)}
                 />
@@ -148,7 +148,7 @@ ${concatInputs()}`);
                 <input
                     type="number"
                     value={numberOfTrips}
-                    className="form-input ml-4 px-2 py-2 rounded-full"
+                    className="form-input ml-4 px-2 py-2 rounded-full w-32"
                     onChange={makeHandleChangeEvent(setNumberOfTrips)}
                 />
             </div>
@@ -157,7 +157,7 @@ ${concatInputs()}`);
                 <input
                     type="number"
                     value={fuelCost}
-                    className="form-input ml-4 px-2 py-2 rounded-full"
+                    className="form-input ml-4 px-2 py-2 rounded-full w-32"
                     onChange={makeHandleChangeEvent(setFuelCost)}
                 />
             </div>
@@ -167,7 +167,7 @@ ${concatInputs()}`);
                     <input
                         type="number"
                         value={hulog}
-                        className="form-input ml-4 px-2 py-2 rounded-full"
+                        className="form-input ml-4 px-2 py-2 rounded-full w-32"
                         onChange={makeHandleChangeEvent(setHulog)}
                     />
                 </label>
@@ -182,7 +182,7 @@ ${concatInputs()}`);
                             <div key={rowIndex} style={{display: "flex", flexWrap: "wrap"}}>
                                 {row.map((col, colIndex) => (
                                     <input
-                                        className="form-input m-2  px-2 py-2 rounded-full"
+                                        className="form-input m-2  px-2 py-2 rounded-full w-32"
                                         key={colIndex}
                                         value={col}
                                         onChange={(e) => handleChange(e, rowIndex, colIndex)}
@@ -194,6 +194,7 @@ ${concatInputs()}`);
                     <button
                         onClick={addInput}
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-12"
+                        type="button"
                     >
                         Add
                     </button>
@@ -203,6 +204,7 @@ ${concatInputs()}`);
             <h1 className="text-3xl font-bold py-4">Summary Calculations</h1>
             <div className={"text-lg font-bold"}>💸 Gross</div>
             <div className="ml-4 px-2 py-2">Collected Fare: {totalGross}</div>
+            <div className="ml-4 px-2 py-2">Hulog: {hulog}</div>
             <div className={"text-lg font-bold"}>👌 Deductions</div>
             <div className="ml-4 px-2 py-2">Driver: {totalDriver}</div>
             <div className="ml-4 px-2 py-2">Butaw: {totalButaw}</div>
@@ -230,7 +232,7 @@ ${concatInputs()}`);
                 </iframe>
             </div>
 
-            <div className={'italic font-bold'}>
+            <div className={'italic font-bold pb-12 pt-4'}>
                 Click submit once summary is confirmed and
                 submit images on this link -
             </div>
