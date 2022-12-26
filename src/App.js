@@ -1,35 +1,53 @@
 import "./App.css";
-import React, {useMemo, useState, useRef} from "react";
+import React, {useMemo, useState} from "react";
 
-const PRICE_PER_ITEM = 10;
+function smoothScrollToBottom() {
+  const target = document.body.scrollHeight; // get the height of the whole document
+  const start = window.scrollY; // get the current scroll position
+  const duration = 1000; // set the duration of the scroll in milliseconds
+  let startTime = null;
 
+  function animate(currentTime) {
+    if (startTime === null) startTime = currentTime;
+    const timeElapsed = currentTime - startTime;
+    const progress = Math.easeInOutQuad(timeElapsed, start, target - start, duration);
+    window.scrollTo(0, progress);
+    if (timeElapsed < duration) requestAnimationFrame(animate);
+  }
+
+  Math.easeInOutQuad = function (t, b, c, d) {
+    t /= d / 2;
+    if (t < 1) return c / 2 * t * t + b;
+    t--;
+    return -c / 2 * (t * (t - 2) - 1) + b;
+  };
+
+  requestAnimationFrame(animate);
+}
 
 function OrderForm() {
     const [name, setName] = useState("");
-    const [cost, setCost] = useState(0);
     const [costPerTrip, setCostPerTrip] = useState(1440);
     const [driverPerTrip, setDriverPerTrip] = useState(200);
     const [butawPerTrip, setButawPerTrip] = useState(120);
     const [numberOfTrips, setNumberOfTrips] = useState(0);
     const [fuelCost, setFuelCost] = useState(0);
     const [hulog, setHulog] = useState(0);
-    // Declare a state variable called "inputs" with an initial value of an empty array
     const [inputs, setInputs] = useState([[0, ""]]);
-    const refIframe = useRef(null);
 
-    const formLink = `https://docs.google.com/forms/d/e/1FAIpQLSeXCGnAO2376A0D7oRqs7VzOWFLAmOr8UUbdne4M4pnW0jkAQ/viewform`
+    const formLink = `https://docs.google.com/forms/d/e/1FAIpQLSeXCGnAO2376A0D7oRqs7VzOWFLAmOr8UUbdne4M4pnW0jkAQ/viewform`;
 
     const totalButaw = useMemo(() => {
-        return numberOfTrips * butawPerTrip
-    }, [numberOfTrips, butawPerTrip])
+        return numberOfTrips * butawPerTrip;
+    }, [numberOfTrips, butawPerTrip]);
 
     const totalGross = useMemo(() => {
-        return numberOfTrips * costPerTrip
-    }, [numberOfTrips, butawPerTrip])
+        return numberOfTrips * costPerTrip;
+    }, [numberOfTrips, butawPerTrip]);
 
     const totalDriver = useMemo(() => {
-        return numberOfTrips * driverPerTrip
-    }, [numberOfTrips, butawPerTrip])
+        return numberOfTrips * driverPerTrip;
+    }, [numberOfTrips, butawPerTrip]);
 
     const sumFirstInput = useMemo(() => {
         let sum = 0;
@@ -42,9 +60,24 @@ function OrderForm() {
         return sum;
     }, [inputs]);
 
+    const concatInput = useMemo(() => {
+        const concatInputs = () => {
+            return inputs.map((row) => row.join(", ")).join("\n");
+        };
+
+        return encodeURIComponent(`
+Summary
+${concatInputs()}`);
+    }, [inputs]);
+
+    const totalRemit = useMemo(() => {
+        return totalGross + Number(hulog) - totalDriver - totalButaw - fuelCost - sumFirstInput;
+    }, [totalGross, hulog, fuelCost, sumFirstInput, totalButaw, totalDriver]);
+
+
     const queryParams = useMemo(() => {
-        return `?usp=pp_url&entry.2049482468=Roy&entry.1427149617=${numberOfTrips}&entry.77890937=${totalGross}&entry.315326400=890&entry.323360792=${totalButaw}&entry.230399082=${totalDriver}&entry.1772557068=${sumFirstInput}&entry.859717077=asd`
-    }, [cost, numberOfTrips, sumFirstInput, totalButaw, totalGross, totalDriver])
+        return `?usp=pp_url&entry.2049482468=Roy&entry.1427149617=${numberOfTrips}&entry.77890937=${totalGross}&entry.315326400=${fuelCost}&entry.323360792=${totalButaw}&entry.230399082=${totalDriver}&entry.1772557068=${sumFirstInput}&entry.859717077=${concatInput}&entry.1952606328=${hulog}&entry.1604827549=A`;
+    }, [numberOfTrips, sumFirstInput, totalButaw, totalGross, totalDriver, fuelCost, hulog]);
 
     const addInput = () => {
         setInputs([...inputs, [0, ""]]);
@@ -64,22 +97,14 @@ function OrderForm() {
 
     function handleSubmit(event) {
         event.preventDefault();
-        setCost(numberOfTrips * PRICE_PER_ITEM);
-        if (refIframe) {
-            console.log(refIframe, refIframe.current.contentWindow.document.body.querySelector('form'));
-            // refIframe.current.querySelector('form').submit();
-        }
+        smoothScrollToBottom();
     }
-
 
     return (
         <form onSubmit={handleSubmit} className={"px-4"}>
             <h1 className="text-3xl font-bold py-4">Byahe Calculator</h1>
-
             <hr className="my-8 h-px bg-gray-200 border-0 dark:bg-gray-700"/>
-
             <div className={"text-lg py-5"}>🚌 Numbers Per Trip</div>
-
             <div className={"py-4"}>
                 Gross Per Trip:
                 <input
@@ -89,7 +114,6 @@ function OrderForm() {
                     onChange={makeHandleChangeEvent(setCostPerTrip)}
                 />
             </div>
-
             <div className={"py-4"}>
                 Driver Per Trip:
                 <input
@@ -99,7 +123,6 @@ function OrderForm() {
                     onChange={makeHandleChangeEvent(setDriverPerTrip)}
                 />
             </div>
-
             <div className={"py-4"}>
                 Butaw Per Trip:
                 <input
@@ -109,12 +132,9 @@ function OrderForm() {
                     onChange={makeHandleChangeEvent(setButawPerTrip)}
                 />
             </div>
-
             <hr className="my-8 h-px bg-gray-200 border-0 dark:bg-gray-700"/>
-
             <div className={"text-lg py-5"}>💸 Numbers Per Day</div>
-
-            <div className={'py-4'}>
+            <div className={"py-4"}>
                 Name:
                 <input
                     type="text"
@@ -123,7 +143,6 @@ function OrderForm() {
                     onChange={makeHandleChangeEvent(setName)}
                 />
             </div>
-
             <div className={"py-4"}>
                 Number of trips:
                 <input
@@ -133,7 +152,6 @@ function OrderForm() {
                     onChange={makeHandleChangeEvent(setNumberOfTrips)}
                 />
             </div>
-
             <div className={"py-4"}>
                 Fuel Cost:
                 <input
@@ -143,7 +161,6 @@ function OrderForm() {
                     onChange={makeHandleChangeEvent(setFuelCost)}
                 />
             </div>
-
             <div className={"py-4"}>
                 <label>
                     Hulog:
@@ -155,9 +172,7 @@ function OrderForm() {
                     />
                 </label>
             </div>
-
             <hr className="my-8 h-px bg-gray-200 border-0 dark:bg-gray-700"/>
-
             <div>
                 <label className={"font-bold"}>Other Deductions:</label>
 
@@ -184,43 +199,41 @@ function OrderForm() {
                     </button>
                 </div>
             </div>
-
             <hr className="my-8 h-px bg-gray-200 border-0 dark:bg-gray-700"/>
-
             <h1 className="text-3xl font-bold py-4">Summary Calculations</h1>
-
             <div className={"text-lg font-bold"}>💸 Gross</div>
-            <div className="ml-4 px-2 py-2">
-                Collected Fare: {totalGross}
-            </div>
-
+            <div className="ml-4 px-2 py-2">Collected Fare: {totalGross}</div>
             <div className={"text-lg font-bold"}>👌 Deductions</div>
-
             <div className="ml-4 px-2 py-2">Driver: {totalDriver}</div>
-
             <div className="ml-4 px-2 py-2">Butaw: {totalButaw}</div>
-
             <div className="ml-4 px-2 py-2">Fuel Cost: {fuelCost}</div>
-
             <div className="ml-4 px-2 py-2">Total Other Cost: {sumFirstInput}</div>
-
-            <div className={"text-3xl font-bold"}>👀 Total Remit: {cost}</div>
-
-            <div className={"py-12"}>
+            <div className={"text-3xl font-bold"}>👀 Total Remit: {totalRemit}</div>
+            <div className={"py-12 pb-24"}>
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                    Enter
+                    Confirm
                 </button>
             </div>
 
 
+            <hr className="my-8 h-px bg-gray-200 border-0 dark:bg-gray-700"/>
+
             <div>
                 <iframe
                     src={formLink + queryParams}
-                    width="640" height="1352" frameBorder="0" marginHeight="0" marginWidth="0">Loading…
+                    height="2100"
+                    frameBorder="0"
+                    marginHeight="0"
+                    marginWidth="0"
+                >
+                    Loading…
                 </iframe>
             </div>
 
-
+            <div className={'italic font-bold'}>
+                Click submit once summary is confirmed and
+                submit images on this link -
+            </div>
         </form>
     );
 }
