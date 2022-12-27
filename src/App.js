@@ -2,27 +2,27 @@ import "./App.css";
 import React, {useMemo, useState} from "react";
 
 function smoothScrollToBottom() {
-  const target = document.body.scrollHeight; // get the height of the whole document
-  const start = window.scrollY; // get the current scroll position
-  const duration = 1000; // set the duration of the scroll in milliseconds
-  let startTime = null;
+    const target = document.body.scrollHeight; // get the height of the whole document
+    const start = window.scrollY; // get the current scroll position
+    const duration = 1000; // set the duration of the scroll in milliseconds
+    let startTime = null;
 
-  function animate(currentTime) {
-    if (startTime === null) startTime = currentTime;
-    const timeElapsed = currentTime - startTime;
-    const progress = Math.easeInOutQuad(timeElapsed, start, target - start, duration);
-    window.scrollTo(0, progress);
-    if (timeElapsed < duration) requestAnimationFrame(animate);
-  }
+    function animate(currentTime) {
+        if (startTime === null) startTime = currentTime;
+        const timeElapsed = currentTime - startTime;
+        const progress = Math.easeInOutQuad(timeElapsed, start, target - start, duration);
+        window.scrollTo(0, progress);
+        if (timeElapsed < duration) requestAnimationFrame(animate);
+    }
 
-  Math.easeInOutQuad = function (t, b, c, d) {
-    t /= d / 2;
-    if (t < 1) return c / 2 * t * t + b;
-    t--;
-    return -c / 2 * (t * (t - 2) - 1) + b;
-  };
+    Math.easeInOutQuad = function (t, b, c, d) {
+        t /= d / 2;
+        if (t < 1) return c / 2 * t * t + b;
+        t--;
+        return -c / 2 * (t * (t - 2) - 1) + b;
+    };
 
-  requestAnimationFrame(animate);
+    requestAnimationFrame(animate);
 }
 
 function OrderForm() {
@@ -34,6 +34,19 @@ function OrderForm() {
     const [fuelCost, setFuelCost] = useState(0);
     const [hulog, setHulog] = useState(0);
     const [inputs, setInputs] = useState([[0, ""]]);
+
+    function getCurrentDate() {
+        // Get the current date
+        var currentDate = new Date();
+
+        // Get the year, month, and day as strings
+        var year = currentDate.getFullYear().toString();
+        var month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+        var day = currentDate.getDate().toString().padStart(2, "0");
+
+        // Return the date as a string in the format "YYYY-MM-DD"
+        return year + "-" + month + "-" + day;
+    }
 
     const formLink = `https://docs.google.com/forms/d/e/1FAIpQLSeXCGnAO2376A0D7oRqs7VzOWFLAmOr8UUbdne4M4pnW0jkAQ/viewform`;
 
@@ -76,7 +89,7 @@ ${concatInputs()}`);
 
 
     const queryParams = useMemo(() => {
-        return `?usp=pp_url&entry.2049482468=Roy&entry.1427149617=${numberOfTrips}&entry.77890937=${totalGross}&entry.315326400=${fuelCost}&entry.323360792=${totalButaw}&entry.230399082=${totalDriver}&entry.1772557068=${sumFirstInput}&entry.859717077=${concatInput}&entry.1952606328=${hulog}&entry.1604827549=A`;
+        return `?usp=pp_url&entry.2049482468=Roy&entry.1427149617=${numberOfTrips}&entry.77890937=${totalGross}&entry.315326400=${fuelCost}&entry.323360792=${totalButaw}&entry.230399082=${totalDriver}&entry.1772557068=${sumFirstInput}&entry.859717077=${concatInput}&entry.1952606328=${hulog}&entry.1604827549=A&entry.1188946472=${getCurrentDate()}`;
     }, [numberOfTrips, sumFirstInput, totalButaw, totalGross, totalDriver, fuelCost, hulog]);
 
     const addInput = () => {
