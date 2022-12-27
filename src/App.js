@@ -34,6 +34,7 @@ function OrderForm() {
     const [fuelCost, setFuelCost] = useState(0);
     const [hulog, setHulog] = useState(0);
     const [inputs, setInputs] = useState([[0, ""]]);
+    const [selectedName, setSelectedName] = useState('');
 
     function getCurrentDate() {
         // Get the current date
@@ -87,10 +88,9 @@ ${concatInputs()}`);
         return totalGross + Number(hulog) - totalDriver - totalButaw - fuelCost - sumFirstInput;
     }, [totalGross, hulog, fuelCost, sumFirstInput, totalButaw, totalDriver]);
 
-
     const queryParams = useMemo(() => {
-        return `?usp=pp_url&entry.2049482468=Roy&entry.1427149617=${numberOfTrips}&entry.77890937=${totalGross}&entry.315326400=${fuelCost}&entry.323360792=${totalButaw}&entry.230399082=${totalDriver}&entry.1772557068=${sumFirstInput}&entry.859717077=${concatInput}&entry.1952606328=${hulog}&entry.1604827549=A&entry.1188946472=${getCurrentDate()}`;
-    }, [numberOfTrips, sumFirstInput, totalButaw, totalGross, totalDriver, fuelCost, hulog]);
+        return `?usp=pp_url&entry.2049482468=${selectedName}&entry.1427149617=${numberOfTrips}&entry.77890937=${totalGross}&entry.315326400=${fuelCost}&entry.323360792=${totalButaw}&entry.230399082=${totalDriver}&entry.1772557068=${sumFirstInput}&entry.859717077=${concatInput}&entry.1952606328=${hulog}&entry.1604827549=A&entry.1188946472=${getCurrentDate()}`;
+    }, [numberOfTrips, sumFirstInput, totalButaw, totalGross, totalDriver, fuelCost, hulog, selectedName, concatInput]);
 
     const addInput = () => {
         setInputs([...inputs, [0, ""]]);
@@ -117,7 +117,7 @@ ${concatInputs()}`);
         <form onSubmit={handleSubmit} className={"px-4"}>
             <h1 className="text-3xl font-bold py-4">Byahe Calculator</h1>
             <hr className="my-8 h-px bg-gray-200 border-0 dark:bg-gray-700"/>
-            <div className={"text-lg py-5"}>🚌 Numbers Per Trip</div>
+            <div className={"text-lg py-5"}>🚌 Details Per Trip</div>
             <div className={"py-4"}>
                 Gross Per Trip:
                 <input
@@ -146,7 +146,21 @@ ${concatInputs()}`);
                 />
             </div>
             <hr className="my-8 h-px bg-gray-200 border-0 dark:bg-gray-700"/>
-            <div className={"text-lg py-5"}>💸 Numbers Per Day</div>
+            <div className={"text-lg py-5"}>💸 Details Per Remit</div>
+
+            <div>
+                <label>Name</label>
+                <select
+                    className="form-input ml-4 px-2 py-2 rounded-full w-32"
+                    value={selectedName} onChange={makeHandleChangeEvent(setSelectedName)}
+                >
+                    <option value="">---</option>
+                    {['1053', '1725'].map(option => (
+                        <option value={option}>{option}</option>
+                    ))}
+                </select>
+            </div>
+
             <div className={"py-4"}>
                 Name:
                 <input
@@ -215,6 +229,7 @@ ${concatInputs()}`);
             </div>
             <hr className="my-8 h-px bg-gray-200 border-0 dark:bg-gray-700"/>
             <h1 className="text-3xl font-bold py-4">Summary Calculations</h1>
+            <div className={"text-lg font-bold"}>🚛 Unit: {selectedName}</div>
             <div className={"text-lg font-bold"}>💸 Gross</div>
             <div className="ml-4 px-2 py-2">Collected Fare: {totalGross}</div>
             <div className="ml-4 px-2 py-2">Hulog: {hulog}</div>
@@ -224,7 +239,7 @@ ${concatInputs()}`);
             <div className="ml-4 px-2 py-2">Fuel Cost: {fuelCost}</div>
             <div className="ml-4 px-2 py-2">Total Other Cost: {sumFirstInput}</div>
             <div className={"text-3xl font-bold"}>👀 Total Remit: {totalRemit}</div>
-            <div className={"py-12 pb-24"}>
+            <div className={"py-12 pb-64"}>
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
                     Confirm
                 </button>
@@ -236,7 +251,7 @@ ${concatInputs()}`);
             <div>
                 <iframe
                     src={formLink + queryParams}
-                    height="2100"
+                    height="2200"
                     frameBorder="0"
                     marginHeight="0"
                     marginWidth="0"
@@ -246,8 +261,8 @@ ${concatInputs()}`);
             </div>
 
             <div className={'italic font-bold pb-12 pt-4'}>
-                Click submit once summary is confirmed and
-                submit images on telegram
+                Click SUBMIT once summary is confirmed and
+                submit images separately
             </div>
         </form>
     );
