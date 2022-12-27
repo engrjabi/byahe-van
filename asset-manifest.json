@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/byahe-van/static/css/main.5343147b.css",
-    "main.js": "/byahe-van/static/js/main.926a049d.js",
+    "main.css": "/byahe-van/static/css/main.cb3892f7.css",
+    "main.js": "/byahe-van/static/js/main.39bae36d.js",
     "index.html": "/byahe-van/index.html",
-    "main.5343147b.css.map": "/byahe-van/static/css/main.5343147b.css.map",
-    "main.926a049d.js.map": "/byahe-van/static/js/main.926a049d.js.map"
+    "main.cb3892f7.css.map": "/byahe-van/static/css/main.cb3892f7.css.map",
+    "main.39bae36d.js.map": "/byahe-van/static/js/main.39bae36d.js.map"
   },
   "entrypoints": [
-    "static/css/main.5343147b.css",
-    "static/js/main.926a049d.js"
+    "static/css/main.cb3892f7.css",
+    "static/js/main.39bae36d.js"
   ]
 }
