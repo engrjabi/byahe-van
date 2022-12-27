@@ -40,9 +40,9 @@ function OrderForm() {
     const [costPerTrip, setCostPerTrip] = useState(1440);
     const [driverPerTrip, setDriverPerTrip] = useState(200);
     const [butawPerTrip, setButawPerTrip] = useState(120);
-    const [numberOfTrips, setNumberOfTrips] = useState(0);
-    const [fuelCost, setFuelCost] = useState(0);
-    const [hulog, setHulog] = useState(0);
+    const [numberOfTrips, setNumberOfTrips] = useState();
+    const [fuelCost, setFuelCost] = useState();
+    const [hulog, setHulog] = useState();
     const [inputs, setInputs] = useState([[0, ""]]);
     const [selectedName, setSelectedName] = useState('');
     const [loadedCount, setLoadedCount] = useState(0);
@@ -263,7 +263,9 @@ ${concatInputs()}`);
             <div className="ml-4 px-2 py-2">Total Other Cost: {sumFirstInput}</div>
             <div className={"text-3xl font-bold"}>👀 Total Remit: {totalRemit}</div>
             <div className={"py-12 pb-64"}>
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                <button
+                    tabindex="0"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
                     Confirm
                 </button>
             </div>
