@@ -1,5 +1,5 @@
 import "./App.css";
-import React, {useMemo, useState} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 
 function smoothScrollToBottom() {
     const target = document.body.scrollHeight; // get the height of the whole document
@@ -35,6 +35,8 @@ function OrderForm() {
     const [hulog, setHulog] = useState(0);
     const [inputs, setInputs] = useState([[0, ""]]);
     const [selectedName, setSelectedName] = useState('');
+    const [loadedCount, setLoadedCount] = useState(0);
+    const iframeRef = useRef(null);
 
     function getCurrentDate() {
         // Get the current date
@@ -92,6 +94,17 @@ ${concatInputs()}`);
         return `?usp=pp_url&entry.2049482468=${selectedName}&entry.1427149617=${numberOfTrips}&entry.77890937=${totalGross}&entry.315326400=${fuelCost}&entry.323360792=${totalButaw}&entry.230399082=${totalDriver}&entry.1772557068=${sumFirstInput}&entry.859717077=${concatInput}&entry.1952606328=${hulog}&entry.1604827549=A&entry.1188946472=${getCurrentDate()}`;
     }, [numberOfTrips, sumFirstInput, totalButaw, totalGross, totalDriver, fuelCost, hulog, selectedName, concatInput]);
 
+
+    useEffect(() => {
+        if (loadedCount > 0 && iframeRef != null) {
+            iframeRef.current.height = '300px'
+        }
+
+        if (loadedCount === 0 && iframeRef != null) {
+            iframeRef.current.height = '2200px'
+        }
+    }, [loadedCount])
+
     const addInput = () => {
         setInputs([...inputs, [0, ""]]);
     };
@@ -102,6 +115,10 @@ ${concatInputs()}`);
         setInputs(values);
     };
 
+    function countLoaded(event) {
+        setLoadedCount(loadedCount + 1);
+    }
+
     function makeHandleChangeEvent(handler) {
         return function (event) {
             handler(event.target.value);
@@ -110,7 +127,8 @@ ${concatInputs()}`);
 
     function handleSubmit(event) {
         event.preventDefault();
-        smoothScrollToBottom();
+         setLoadedCount(0);
+         setTimeout(() => smoothScrollToBottom(), 500);
     }
 
     return (
@@ -250,8 +268,10 @@ ${concatInputs()}`);
 
             <div>
                 <iframe
+                    onLoad={countLoaded}
+                    ref={iframeRef}
                     src={formLink + queryParams}
-                    height="2200"
+                    height="300"
                     frameBorder="0"
                     marginHeight="0"
                     marginWidth="0"
