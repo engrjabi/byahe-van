@@ -25,8 +25,18 @@ function smoothScrollToBottom() {
     requestAnimationFrame(animate);
 }
 
+function scrollToTop() {
+    // Get the current scroll position
+    const currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
+
+    if (currentScroll > 0) {
+        // Scroll towards the top with an easing function
+        window.requestAnimationFrame(scrollToTop);
+        window.scrollTo(0, currentScroll - (currentScroll / 5));
+    }
+}
+
 function OrderForm() {
-    const [name, setName] = useState("");
     const [costPerTrip, setCostPerTrip] = useState(1440);
     const [driverPerTrip, setDriverPerTrip] = useState(200);
     const [butawPerTrip, setButawPerTrip] = useState(120);
@@ -105,6 +115,10 @@ ${concatInputs()}`);
         }
     }, [loadedCount])
 
+    useEffect(() => {
+        setTimeout(() => scrollToTop(), 1000);
+    }, [])
+
     const addInput = () => {
         setInputs([...inputs, [0, ""]]);
     };
@@ -127,8 +141,8 @@ ${concatInputs()}`);
 
     function handleSubmit(event) {
         event.preventDefault();
-         setLoadedCount(0);
-         setTimeout(() => smoothScrollToBottom(), 500);
+        setLoadedCount(0);
+        setTimeout(() => smoothScrollToBottom(), 500);
     }
 
     return (
@@ -180,15 +194,6 @@ ${concatInputs()}`);
             </div>
 
             <div className={"py-4"}>
-                Name:
-                <input
-                    type="text"
-                    className="form-input ml-4 px-2 py-2 rounded-full w-32"
-                    value={name}
-                    onChange={makeHandleChangeEvent(setName)}
-                />
-            </div>
-            <div className={"py-4"}>
                 Number of trips:
                 <input
                     type="number"
@@ -238,10 +243,10 @@ ${concatInputs()}`);
                     </div>
                     <button
                         onClick={addInput}
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-12"
+                        className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded mt-12"
                         type="button"
                     >
-                        Add
+                        Add deductions
                     </button>
                 </div>
             </div>
@@ -280,10 +285,18 @@ ${concatInputs()}`);
                 </iframe>
             </div>
 
-            <div className={'italic font-bold pb-12 pt-4'}>
+            <div className={'italic font-bold pb-4 pt-4'}>
                 Click SUBMIT once summary is confirmed and
                 submit images separately
             </div>
+
+            <button
+                onClick={() => (window.location.reload())}
+                className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded mt-6 mb-12"
+                type="button"
+            >
+                Refresh
+            </button>
         </form>
     );
 }
