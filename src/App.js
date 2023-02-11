@@ -48,7 +48,7 @@ function OrderForm() {
   const [butawPerTrip, setButawPerTrip] = useState(120);
   const [numberOfTrips, setNumberOfTrips] = useState();
   const [fuelCost, setFuelCost] = useState();
-  const [hulog, setHulog] = useState();
+  const [hulog, setHulog] = useState(0);
   const [inputs, setInputs] = useState([[0, ""]]);
   const [selectedName, setSelectedName] = useState("");
   const [loadedCount, setLoadedCount] = useState(0);
